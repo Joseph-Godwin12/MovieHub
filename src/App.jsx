@@ -2,8 +2,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import MovieDetails from "./pages/MovieDetails";
 import SearchResults from "./pages/SearchResult";
-import Watchlist from "./components/WatchList";
-import Favorites from "./components/Favorites";
+import Watchlist from "./pages/WatchList";
+import Favorites from "./pages/Favorites";
 
 export default function App() {
   return (
