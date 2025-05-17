@@ -27,10 +27,16 @@ export default function SearchResults() {
     };
 
     fetchSearchResults();
+
+    // Store query in search history
+    const storedHistory = JSON.parse(localStorage.getItem("searchHistory")) || [];
+    const updatedHistory = [query, ...storedHistory.filter((q) => q !== query)];
+    const limitedHistory = updatedHistory.slice(0, 10); // limit to last 10 searches
+    localStorage.setItem("searchHistory", JSON.stringify(limitedHistory));
   }, [query]);
 
   if (loading) return <Loading />;
-  if (!results.length) return <p className="text-center mt-10">No results found for "{query}"</p>;
+  if (!results.length) return <p className="text-center mt-10 text-white">No results found for "{query}"</p>;
 
   return (
     <>
@@ -42,7 +48,7 @@ export default function SearchResults() {
             <Link
               key={movie.id}
               to={`/movie/${movie.id}`}
-              className="bg-white rounded shadow overflow-hidden hover:scale-105 transition-transform"
+              className="bg-gray-900 rounded shadow overflow-hidden hover:scale-105 transition-transform"
             >
               <img
                 src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
@@ -51,7 +57,7 @@ export default function SearchResults() {
               />
               <div className="p-2">
                 <h3 className="text-sm font-semibold truncate">{movie.title}</h3>
-                <p className="text-xs text-gray-500">Rating: {movie.vote_average}</p>
+                <p className="text-xs text-gray-500">⭐ {movie.vote_average}</p>
               </div>
             </Link>
           ))}

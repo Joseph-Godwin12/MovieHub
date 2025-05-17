@@ -1,23 +1,48 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaSearch, FaHome, FaFilm, FaHeart, FaBookmark } from "react-icons/fa";
 
 export default function Navbar() {
   const [query, setQuery] = useState("");
+  const [searchHistory, setSearchHistory] = useState([]);
+  const [showHistory, setShowHistory] = useState(false);
   const navigate = useNavigate();
+
+  // Load search history from localStorage on mount
+  useEffect(() => {
+    const history = JSON.parse(localStorage.getItem("searchHistory")) || [];
+    setSearchHistory(history);
+  }, []);
+
+  const updateSearchHistory = (newQuery) => {
+    let updatedHistory = [newQuery, ...searchHistory.filter((item) => item !== newQuery)];
+    if (updatedHistory.length > 10) updatedHistory = updatedHistory.slice(0, 10); // Limit to 10 items
+    setSearchHistory(updatedHistory);
+    localStorage.setItem("searchHistory", JSON.stringify(updatedHistory));
+  };
 
   const handleSearch = (e) => {
     e.preventDefault();
-    if (query.trim()) {
-      navigate(`/search/${query}`);
+    const trimmed = query.trim();
+    if (trimmed) {
+      navigate(`/search/${trimmed}`);
+      updateSearchHistory(trimmed);
       setQuery("");
+      setShowHistory(false);
     }
+  };
+
+  const handleSelectHistory = (term) => {
+    navigate(`/search/${term}`);
+    updateSearchHistory(term);
+    setQuery("");
+    setShowHistory(false);
   };
 
   return (
     <>
       {/* Top search bar */}
-      <div className="bg-gray-900 text-white shadow-md w-full p-4 space-x-24 flex justify-between items-center md:space-x-7  sm:justify-center">
+      <div className="bg-gray-900 text-white shadow-md w-full p-4 space-x-24 flex justify-between items-center md:space-x-7 sm:justify-center relative z-50">
         <NavLink
           to="/"
           className="text-xl font-bold text-blue-400 flex items-center space-x-2"
@@ -29,16 +54,37 @@ export default function Navbar() {
 
         <form
           onSubmit={handleSearch}
-          className="flex items-center w-full max-w-xl space-x-2 sm:mx-4"
+          className="relative flex items-center w-full max-w-xl space-x-2 sm:mx-4"
         >
-          <input
+          <div className="relative w-full">
+         <input
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search movies..."
-            className="w-full sm:flex-1 px-4 py-2 rounded-md md:w-44 bg-gray-800 text-white text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-blue-400"
+            onFocus={() => setShowHistory(true)}
+            onBlur={() => setTimeout(() => setShowHistory(false), 200)} // delay to allow click
+            placeholder="Search for a movie..."
+            className="w-full px-4 py-2 rounded-lg bg-gray-800 text-white placeholder-gray-400 text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 ease-in-out shadow-inner"
             aria-label="Search movies"
           />
+
+
+
+            {/* History dropdown */}
+            {showHistory && searchHistory.length > 0 && (
+              <ul className="absolute left-0 right-0 bg-gray-800 border border-gray-700 mt-1 rounded-md max-h-48 overflow-y-auto shadow-lg text-sm z-50">
+                {searchHistory.map((item, idx) => (
+                  <li
+                    key={idx}
+                    onClick={() => handleSelectHistory(item)}
+                    className="px-4 py-2 hover:bg-blue-600 cursor-pointer truncate"
+                  >
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
 
           <button
             type="submit"
