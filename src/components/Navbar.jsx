@@ -137,44 +137,47 @@ export default function Navbar() {
       </div>
 
       {/* Mobile nav */}
-      <div className="sm:hidden fixed bottom-0 left-0 right-0 bg-gray-900 text-white shadow-inner py-2 border-t border-gray-700 flex justify-around z-50">
-        <NavLink
-          to="/"
-          className={({ isActive }) =>
-            isActive
-              ? "flex flex-col items-center text-blue-400"
-              : "flex flex-col items-center"
-          }
-          title="Home"
-        >
-          <FaHome size={20} />
-          <span className="text-xs">Home</span>
-        </NavLink>
-        <NavLink
-          to="/favorites"
-          className={({ isActive }) =>
-            isActive
-              ? "flex flex-col items-center text-blue-400"
-              : "flex flex-col items-center"
-          }
-          title="Favorites"
-        >
-          <FaHeart size={20} />
-          <span className="text-xs">Fav</span>
-        </NavLink>
-        <NavLink
-          to="/watchlist"
-          className={({ isActive }) =>
-            isActive
-              ? "flex flex-col items-center text-blue-400"
-              : "flex flex-col items-center"
-          }
-          title="Watchlist"
-        >
-          <FaBookmark size={20} />
-          <span className="text-xs">Watch</span>
-        </NavLink>
-      </div>
+      <div className="sm:hidden fixed inset-x-0 bottom-0 bg-gray-900 text-white shadow-inner py-2 border-t border-gray-700 flex justify-around z-[100] pointer-events-auto touch-manipulation">
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
+              isActive
+                ? "flex flex-col items-center text-blue-400"
+                : "flex flex-col items-center"
+            }
+            title="Home"
+          >
+            <FaHome size={20} />
+            <span className="text-xs">Home</span>
+          </NavLink>
+
+          <NavLink
+            to="/favorites"
+            className={({ isActive }) =>
+              isActive
+                ? "flex flex-col items-center text-blue-400"
+                : "flex flex-col items-center"
+            }
+            title="Favorites"
+          >
+            <FaHeart size={20} />
+            <span className="text-xs">Fav</span>
+          </NavLink>
+
+          <NavLink
+            to="/watchlist"
+            className={({ isActive }) =>
+              isActive
+                ? "flex flex-col items-center text-blue-400"
+                : "flex flex-col items-center"
+            }
+            title="Watchlist"
+          >
+            <FaBookmark size={20} />
+            <span className="text-xs">Watch</span>
+          </NavLink>
+        </div>
+
     </>
   );
 }
